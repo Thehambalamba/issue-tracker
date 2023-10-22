@@ -10,6 +10,7 @@ import SimpleMDE from "react-simplemde-editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validation-schemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/error-message";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -46,11 +47,7 @@ function NewIssuePage() {
         <TextField.Root>
           <TextField.Input placeholder="Title" {...register("title")} />
         </TextField.Root>
-        {errors.title ? (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        ) : null}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -60,11 +57,7 @@ function NewIssuePage() {
             );
           }}
         />
-        {errors.description ? (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        ) : null}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button>Submit New Issue</Button>
       </form>
     </div>
