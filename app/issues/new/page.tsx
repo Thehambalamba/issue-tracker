@@ -37,7 +37,7 @@ function NewIssuePage() {
         name="description"
         control={control}
         render={({ field }) => {
-          return <SimpleMDE placeholder="Description" {...field} />;
+          return <SimpleMDE placeholder="Description" {...field} ref={null} />;
         }}
       />
       <Button>Submit New Issue</Button>
