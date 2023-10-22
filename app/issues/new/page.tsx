@@ -4,13 +4,9 @@ import { TextField, Button } from "@radix-ui/themes";
 import React from "react";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
-import dynamic from "next/dynamic";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
+import SimpleMDE from "react-simplemde-editor";
 
 type IssueForm = {
   title: string;
