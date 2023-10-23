@@ -1,0 +1,11 @@
+import { Button } from "@radix-ui/themes";
+
+type Props = {
+  issueId: number;
+};
+
+function DeleteIssueButton({ issueId }: Props) {
+  return <Button color="red">Delete Issue</Button>;
+}
+
+export default DeleteIssueButton;
