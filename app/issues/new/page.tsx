@@ -6,12 +6,19 @@ import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import SimpleMDE from "react-simplemde-editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validation-schemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/error-message";
 import Spinner from "@/app/components/spinner";
+import dynamic from "next/dynamic";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+  loading: () => <Skeleton height="20rem" />,
+});
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
