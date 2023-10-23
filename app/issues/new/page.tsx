@@ -1,19 +1,17 @@
 "use client";
 
-import { TextField, Button, Callout, Text } from "@radix-ui/themes";
-import React from "react";
-import "easymde/dist/easymde.min.css";
-import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { ErrorMessage, Skeleton } from "@/app/components";
+import { Spinner } from "@/app/components";
 import { createIssueSchema } from "@/app/validation-schemas";
-import { z } from "zod";
-import ErrorMessage from "@/app/components/error-message";
-import Spinner from "@/app/components/spinner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import axios from "axios";
+import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
