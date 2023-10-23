@@ -2,7 +2,7 @@
 
 import { ErrorMessage, Skeleton } from "@/app/components";
 import { Spinner } from "@/app/components";
-import { createIssueSchema } from "@/app/validation-schemas";
+import { issueSchema } from "@/app/validation-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
 import { Button, Callout, TextField } from "@radix-ui/themes";
@@ -19,7 +19,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   loading: () => <Skeleton height="20rem" />,
 });
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof issueSchema>;
 
 type Props = {
   issue?: Issue;
@@ -33,7 +33,7 @@ function IssueForm({ issue }: Props) {
     handleSubmit,
     formState: { errors },
   } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
   const [error, setError] = React.useState("");
   const [isSubmiting, setIsSubmiting] = React.useState(false);
