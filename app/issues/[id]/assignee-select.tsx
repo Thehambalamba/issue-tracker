@@ -17,6 +17,7 @@ function AssigneeSelect() {
 
     fetchUsers();
   }, []);
+
   return (
     <Select.Root>
       <Select.Trigger placeholder="Assign..." />
