@@ -1,10 +1,10 @@
 "use client";
 
-import { Select } from "@radix-ui/themes";
-import { Issue, User } from "@prisma/client";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/app/components";
+import { Issue, User } from "@prisma/client";
+import { Select } from "@radix-ui/themes";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 type Props = {
@@ -13,17 +13,7 @@ type Props = {
 
 const UNASSIGNED_VALUE = "unassigned";
 function AssigneeSelect({ issue }: Props) {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: () =>
-      axios.get<User[]>("/api/users").then((response) => response.data),
-    staleTime: 60 * 1000, // 60s
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
 
   if (isLoading) {
     return <Skeleton />;
@@ -33,18 +23,20 @@ function AssigneeSelect({ issue }: Props) {
     return null;
   }
 
+  const assignIssue = (userId: string) => {
+    axios
+      .patch(`/api/issues/${issue.id}`, {
+        assignedToUserId: userId === UNASSIGNED_VALUE ? null : userId,
+      })
+      .catch(() => {
+        toast.error("Changes could not be saved.");
+      });
+  };
+
   return (
     <>
       <Select.Root
-        onValueChange={(userId) => {
-          axios
-            .patch(`/api/issues/${issue.id}`, {
-              assignedToUserId: userId === UNASSIGNED_VALUE ? null : userId,
-            })
-            .catch((error) => {
-              toast.error("Changes could not be saved.");
-            });
-        }}
+        onValueChange={assignIssue}
         defaultValue={issue.assignedToUserId || UNASSIGNED_VALUE}
       >
         <Select.Trigger placeholder="Assign..." />
@@ -63,6 +55,16 @@ function AssigneeSelect({ issue }: Props) {
       <Toaster />
     </>
   );
+}
+
+function useUsers() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: () =>
+      axios.get<User[]>("/api/users").then((response) => response.data),
+    staleTime: 60 * 1000, // 60s
+    retry: 3,
+  });
 }
 
 export default AssigneeSelect;
