@@ -14,7 +14,7 @@ type Props = {
 type Columns = { label: string; value: keyof Issue; className?: string }[];
 
 async function IssuesPage({ searchParams }: Props) {
-  const COLUMNS: Columns = [
+  const columns: Columns = [
     { label: "Issue", value: "title" },
     { label: "Status", value: "status", className: "hidden md:table-cell" },
     { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
@@ -23,8 +23,15 @@ async function IssuesPage({ searchParams }: Props) {
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
     : undefined;
-
-  const issues = await prisma.issue.findMany({ where: { status: status } });
+  const orderBy = columns
+    .map((column) => column.value)
+    .includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: "asc" }
+    : undefined;
+  const issues = await prisma.issue.findMany({
+    where: { status: status },
+    orderBy,
+  });
 
   return (
     <div className="max-w-xl">
@@ -32,7 +39,7 @@ async function IssuesPage({ searchParams }: Props) {
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            {COLUMNS.map(({ label, value, className }) => (
+            {columns.map(({ label, value, className }) => (
               <Table.ColumnHeaderCell key={value} className={className}>
                 <NextLink
                   href={{
