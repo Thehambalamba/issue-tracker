@@ -5,6 +5,7 @@ import { Issue, User } from "@prisma/client";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/app/components";
+import toast, { Toaster } from "react-hot-toast";
 
 type Props = {
   issue: Issue;
@@ -33,27 +34,34 @@ function AssigneeSelect({ issue }: Props) {
   }
 
   return (
-    <Select.Root
-      onValueChange={(userId) => {
-        axios.patch(`/api/issues/${issue.id}`, {
-          assignedToUserId: userId === UNASSIGNED_VALUE ? null : userId,
-        });
-      }}
-      defaultValue={issue.assignedToUserId || UNASSIGNED_VALUE}
-    >
-      <Select.Trigger placeholder="Assign..." />
-      <Select.Content>
-        <Select.Group>
-          <Select.Label>Suggestions</Select.Label>
-          <Select.Item value={UNASSIGNED_VALUE}>Unassigned</Select.Item>
-          {users?.map((user) => (
-            <Select.Item key={user.id} value={user.id}>
-              {user.name}
-            </Select.Item>
-          ))}
-        </Select.Group>
-      </Select.Content>
-    </Select.Root>
+    <>
+      <Select.Root
+        onValueChange={(userId) => {
+          axios
+            .patch(`/api/issues/${issue.id}`, {
+              assignedToUserId: userId === UNASSIGNED_VALUE ? null : userId,
+            })
+            .catch((error) => {
+              toast.error("Changes could not be saved.");
+            });
+        }}
+        defaultValue={issue.assignedToUserId || UNASSIGNED_VALUE}
+      >
+        <Select.Trigger placeholder="Assign..." />
+        <Select.Content>
+          <Select.Group>
+            <Select.Label>Suggestions</Select.Label>
+            <Select.Item value={UNASSIGNED_VALUE}>Unassigned</Select.Item>
+            {users?.map((user) => (
+              <Select.Item key={user.id} value={user.id}>
+                {user.name}
+              </Select.Item>
+            ))}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+      <Toaster />
+    </>
   );
 }
 
