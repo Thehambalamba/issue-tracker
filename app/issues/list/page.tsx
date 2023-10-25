@@ -1,15 +1,24 @@
 import { Link } from "@/app/components";
+import NextLink from "next/link";
 import prisma from "@/prisma/client";
 import { Table } from "@radix-ui/themes";
 import { IssueStatusBadge } from "../../components";
 import IssueActions from "./issue-actions";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 
 type Props = {
-  searchParams: { status: Status };
+  searchParams: { status: Status; orderBy: keyof Issue };
 };
 
+type Columns = { label: string; value: keyof Issue; className?: string }[];
+
 async function IssuesPage({ searchParams }: Props) {
+  const COLUMNS: Columns = [
+    { label: "Issue", value: "title" },
+    { label: "Status", value: "status", className: "hidden md:table-cell" },
+    { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  ];
   const statuses = Object.values(Status);
   const status = statuses.includes(searchParams.status)
     ? searchParams.status
@@ -23,13 +32,23 @@ async function IssuesPage({ searchParams }: Props) {
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell>
+            {COLUMNS.map(({ label, value, className }) => (
+              <Table.ColumnHeaderCell key={value} className={className}>
+                <NextLink
+                  href={{
+                    query: {
+                      ...searchParams,
+                      orderBy: value,
+                    },
+                  }}
+                >
+                  {label}
+                </NextLink>
+                {value === searchParams.orderBy ? (
+                  <ArrowUpIcon className="inline" />
+                ) : null}
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
         <Table.Body>
