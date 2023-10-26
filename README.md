@@ -2,7 +2,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+To use the app you need to have a mysql server installed localy and add a `DATABASE_URL` to the `.env` file. In order for auth to work `NEXTAUTH_SECRET` needs to be set, and `NEXTAUTH_URL` should be set to local env. In order for the google auth provider to work you need to add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` from your Google cloud console app (see .env.sample).
+
+First run set node version using nvm:
+
+```bash
+nvm use
+```
+
+Then run the development server:
 
 ```bash
 npm run dev
@@ -13,10 +21,6 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
 ## Learn More
 
